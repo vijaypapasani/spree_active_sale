@@ -1,0 +1,68 @@
+
+<%= render :partial => 'spree/admin/shared/configuration_menu' %>
+
+<% content_for :page_title do %>
+  <%="Sort sales in active sale event" %>
+<% end %>
+
+<%= t(:sort_products_hint_message) %>
+
+<div id="ajax_error" class="errorExplanation" style="display:none;"></div>
+<% content_for :page_actions do %>
+  <% # Because otherwise the form would attempt to use to_param of @taxon %>
+  <% form_url = update_sales_path(params[:active_sale_id],@active_sale_event.id) %>
+  <%= form_for [:update_sales, :admin,@active_sale_event], :method => :post, :url => form_url do |f| %>
+    <%= hidden_field_tag :parent_id, params[:parent_id]%>
+    <%= hidden_field_tag :sale_positions, 0 %>
+
+      <li id="save_order">
+        <%= button_link_to t('spree.active_sale.link.back'), collection_url, :icon => 'icon-arrow-left', :id => 'admin_new_active_sale_link' %>
+      </li>
+  <% end %>
+<% end %>
+
+<% if @sales && @sales.count >0%>
+<ul id="sales" class="thumbnails">
+  <% @sales.each do |sale| %>
+    <%= content_tag_for :li, sale, :class=> "three columns", :style => 'height: 300px; list-style-type: none' do %>
+      <div class="two columns thumbnail" style = "cursor: pointer;" value="<%= sale.id %>">
+          <%= image_tag(sale.sale_images.first.attachment.url(:large), :width => "145", :height => "190", :id=>"image-sale")  %>
+          <div class="caption">
+            <% sale_name = sale.name.split(" ") %>
+            <% sale_name.delete(sale_name.last) %>
+            <h5><%= sale_name.join(" ") %></h5>
+          </div>
+      </div>
+    <% end %>
+  <% end %>
+</ul>
+<%else%>
+</br></br><p>Sorry no sales found under this category</p>
+<%end%>
+
+
+
+
+<script>
+var saveOrder;
+
+saveOrder = function() {
+  var data;
+  data = $("#sales li").map(function() {
+    console.log($(this).children().attr("value"));
+    return $(this).children().attr("value");
+  }).get();
+  $("input[name=sale_positions]").val(data.join(","));
+  return $("#save_order").html('<button class="button btn-primary"><i class="icon-ok icon-white"></i> <%= I18n.t(:save_sorted_order) %></button>');
+};
+
+
+$("#sales").dragsort({
+  dragSelector: "div",
+  dragBetween: true,
+  dragEnd: saveOrder,
+  placeHolderTemplate: "<li class='placeHolder'><div></div></li>"
+});
+
+
+</script>
