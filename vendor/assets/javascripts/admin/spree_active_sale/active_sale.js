@@ -136,6 +136,11 @@ $(document).ready(function(){
                 "separator_before" : true,
                 "label"            : "<i class='icon-edit'></i> " + Spree.translations.edit,
                 "action"           : function (obj) { window.location = base_url + obj.attr("id") + "/edit/" + "?parent_id=" + obj.attr("parent_id"); }
+              },
+              "sort" : {
+                "separator_before" : true,
+                "label"            : "<i class='icon-th'></i> " + "Sort",
+                "action"           : function (obj) { window.location = base_url + obj.attr("id") + "/sort/" + "?parent_id=" + obj.attr("parent_id"); }
               }
             }
           }
