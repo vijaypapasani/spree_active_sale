@@ -39,6 +39,18 @@ module Spree
         redirect_to sort_sales_path(params[:active_sale_id], @active_sale_event.id), :notice => t(:sort_products_taxons_update_message)
       end
 
+      def designer_sort_update_sales
+          @taxon = Spree::Taxon.find_by_name('designers')
+          @active_sale_event = @taxon.active_sale_events.first
+          puts @sales = Spree::ActiveSaleEvent.live_active_and_hidden(:hidden => false).where(:is_designer => true).order( 'start_date DESC' ).sort_by{|e| e[:designer_position]}
+          sale_ids_positions = params[:sale_positions].split(",").reject(&:blank?).map(&:to_i)
+          sale_ids_positions.each_with_index do |id, index|
+          sales = @sales.detect{|p| p.id == id }
+          sales.update_attributes(:designer_position => index) unless sales.nil?
+        end
+        redirect_to designers_path, :notice => t(:sort_products_taxons_update_message)
+      end
+
       private
         def location_after_save
           edit_admin_active_sale_active_sale_event_url(@active_sale_event.active_sale, @active_sale_event, :parent_id => @active_sale_event.parent_id)
