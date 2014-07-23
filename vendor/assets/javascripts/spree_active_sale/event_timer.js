@@ -3,7 +3,7 @@ $(document).ready(function() {
     var cTime = $(this).attr('data-timer');
     var timeLayout = $(this).attr('data-layout');
     // endTime for event in db:
-    var endTime = new Date(cTime);
+    var endTime = new Date(cTime.replace(/\-/g,'\/').replace(/[T|Z]/g,' '));
     // Return the timezone difference between UTC and User Local Time
     // var date = new Date();
     var userTimeZoneDiff = endTime.getTimezoneOffset();
