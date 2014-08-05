@@ -79,6 +79,7 @@ module Spree
 
         def get_eventable
           object_name = params[:active_sale_event]
+          @active_sale_event.update_attributes(:position=>-1) if params[:active_sale_event]['is_position']=="1"
           get_eventable_object(object_name)
         end
 
