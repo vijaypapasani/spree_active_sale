@@ -26,7 +26,9 @@
   <% @sales.each do |sale| %>
     <%= content_tag_for :li, sale, :class=> "three columns", :style => 'height: 300px; list-style-type: none' do %>
       <div class="two columns thumbnail" style = "cursor: pointer;" value="<%= sale.id %>">
-          <%= image_tag(sale.sale_images.first.attachment.url(:large), :width => "145", :height => "190", :id=>"image-sale")  %>
+         <%if sale.sale_images && sale.sale_images.first && sale.sale_images.first.attachment%>
+          <%= image_tag(sale.sale_images.first.attachment.url(:large), :width => "145", :height => "190", :id=>"image-sale")  %> 
+          <%end%>
           <div class="caption">
             <% sale_name = sale.name.split(" ") %>
             <% sale_name.delete(sale_name.last) %>
