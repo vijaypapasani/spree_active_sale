@@ -24,13 +24,13 @@ module Spree
     
           def sort_sales
           @active_sale_event = Spree::ActiveSaleEvent.find(params[:id])
-          @sales=@active_sale_event.children.select { |f| f  if f.live? && f.is_active? && !f.is_hidden?}.sort_by{|e| e[:position]} if @active_sale_event.present?
+          @sales=@active_sale_event.children.select { |f| f  if f.live? && f.is_active? && !f.is_hidden?}.sort_by{|e| e[:position]|| 0} if @active_sale_event.present?
       end
       
       
       def sort_update_sales
           @active_sale_event = Spree::ActiveSaleEvent.find(params[:id])
-          @sales=@active_sale_event.children.select { |f| f  if f.live? && f.is_active? && !f.is_hidden?}.sort_by{|e| e[:position]} if @active_sale_event.present?
+          @sales=@active_sale_event.children.select { |f| f  if f.live? && f.is_active? && !f.is_hidden?}.sort_by{|e| e[:position] || 0} if @active_sale_event.present?
           sale_ids_positions = params[:sale_positions].split(",").reject(&:blank?).map(&:to_i)
           sale_ids_positions.each_with_index do |id, index|
           sales = @sales.detect{|p| p.id == id }
@@ -42,7 +42,7 @@ module Spree
       def designer_sort_update_sales
           @taxon = Spree::Taxon.find_by_name('designers')
           @active_sale_event = @taxon.active_sale_events.first
-          puts @sales = Spree::ActiveSaleEvent.live_active_and_hidden(:hidden => false).where(:is_designer => true).order( 'start_date DESC' ).sort_by{|e| e[:designer_position]}
+          puts @sales = Spree::ActiveSaleEvent.live_active_and_hidden(:hidden => false).where(:is_designer => true).order( 'start_date DESC' ).sort_by{|e| e[:designer_position] || 0}
           sale_ids_positions = params[:sale_positions].split(",").reject(&:blank?).map(&:to_i)
           sale_ids_positions.each_with_index do |id, index|
           sales = @sales.detect{|p| p.id == id }
