@@ -118,10 +118,6 @@ $(document).ready(function(){
                 "label"            : "<i class='icon-plus'></i> " + Spree.translations.add,
                 "action"           : function (obj) { window.location = base_url + "new/?parent_id=" + obj.attr("id"); }
               },
-              "remove" : {
-                "label"            : "<i class='icon-trash'></i> " + Spree.translations.remove,
-                "action"           : function (obj) { this.remove(obj); }
-              },
               "cut" : {
                 "separator_before" : true,
                 "label"            : "<i class='icon-cut'></i> " + Spree.translations.cut,
