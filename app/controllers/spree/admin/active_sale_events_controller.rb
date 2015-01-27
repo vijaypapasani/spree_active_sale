@@ -5,6 +5,7 @@ module Spree
       before_filter :load_active_sale, :only => [:index]
       before_filter :parent_id_for_event, :only => [:new, :edit, :create, :update]
       update.before :get_eventable
+      before_filter :featured_sale
       respond_to :json, :only => [:update_events]
 
       def show
@@ -55,6 +56,20 @@ module Spree
         def location_after_save
           edit_admin_active_sale_active_sale_event_url(@active_sale_event.active_sale, @active_sale_event, :parent_id => @active_sale_event.parent_id)
         end
+
+      def featured_sale
+        active_sale_event = Spree::ActiveSaleEvent.find(params[:sale_id]) rescue nil
+        if active_sale_event.present?
+          nav_menu_image =  NavMenuImage.find_by_sale_event_id(active_sale_event.id)
+
+          if nav_menu_image.present?
+            nav_menu_image.update_attributes(:sale_event_id => params[:sale_id], :sale_type => params[:sale_type], :position => params[:position], :status =>  params[:display_to_menu].present? ? 1 : 0 )
+          else
+            NavMenuImage.create(:sale_event_id => params[:sale_id], :sale_type => params[:sale_type], :position => params[:position], :status =>  params[:display_to_menu].present? ? 1 : 0 )
+          end
+        end
+
+      end
 
       protected
 
